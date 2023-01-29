@@ -23,14 +23,14 @@ const posts = [
   {
     id: 2,
     author: {
-      avatarUrl: 'https://github.com/diego3g.png',
-      name: 'Diego Fernandes',
-      role: 'CTO at Rocketseat'
+      avatarUrl: 'https://github.com/henrique2003.png',
+      name: 'Henrique Cristioglu',
+      role: 'Freelancer'
     },
     content: [
       { type: 'paragraph', content: 'Fala galeraa 👋' },
       { type: 'paragraph', content: 'Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀' },
-      { type: 'link', content: 'www.diegofernandes.com/doctorcare' },
+      { type: 'link', content: 'www.didi.com/doctorcare' },
     ],
     publishedAt: new Date('2023-01-26 16:20:00')
   },
