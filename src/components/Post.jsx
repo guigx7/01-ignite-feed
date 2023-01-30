@@ -1,55 +1,90 @@
-import { Avatar } from './Avatar'
-import { Comment } from './Comment'
-import { format, formatDistanceToNow } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { Avatar } from "./Avatar";
+import { Comment } from "./Comment";
+import { format, formatDistanceToNow } from "date-fns";
+import ptBR from "date-fns/locale/pt-BR";
 
-import styles from './Post.module.css'
-
+import styles from "./Post.module.css";
+import { useState } from "react";
 
 export function Post({ author, publishedAt, content }) {
-	const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", { locale: ptBR })
+  const [comments, setComments] = useState([
+    "Boa!"
+  ]);
 
-	const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {locale: ptBR, addSuffix: true})
+  const [newCommentText, setNewCommentText] = useState("");
 
-	return (
-		<article className={styles.post}>
-			<header>
-				<div className={styles.author}>
-					<Avatar className={styles.avatar} src={author.avatarUrl} />
-					<div className={styles.authorInfo}>
-						<strong>{author.name}</strong>
-						<span>{author.role}</span>
-					</div>
-				</div>
+  const publishedDateFormatted = format(
+    publishedAt,
+    "d 'de' LLLL 'às' HH:mm'h'",
+    { locale: ptBR }
+  );
 
-				<time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>{publishedDateRelativeToNow}</time>
-			</header>
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: ptBR,
+    addSuffix: true,
+  });
 
-			<div className={styles.content}>
-				{content.map(line => {
-					if (line.type === 'paragraph') {
-						return <p>{line.content}</p>
-					}
-					else if (line.type === 'link'){
-						return <p><a href='#'>{line.content}</a></p>
-					}
-				})}
-			</div>
+  function handleCreateNewComment() {
+    event.preventDefault();
+    setComments([...comments, newCommentText]);
+    setNewCommentText('');
+  }
 
-			<form className={styles.commentForm}>
-				<strong>Deixe seu feedback</strong>
-				<textarea placeholder='Deixe um comentário'></textarea>
+  function handleNewCommentChange() {
+    setNewCommentText(event.target.value);
+  }
 
-				<footer>
-					<button type='submit'>Publicar</button>
-				</footer>
-			</form>
+  return (
+    <article className={styles.post}>
+      <header>
+        <div className={styles.author}>
+          <Avatar className={styles.avatar} src={author.avatarUrl} />
+          <div className={styles.authorInfo}>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
+          </div>
+        </div>
 
-			<div className={styles.commentList}>
-				<Comment />
-				<Comment />
-				<Comment />
-			</div>
-		</article>
-	)
+        <time
+          title={publishedDateFormatted}
+          dateTime={publishedAt.toISOString()}
+        >
+          {publishedDateRelativeToNow}
+        </time>
+      </header>
+
+      <div className={styles.content}>
+        {content.map((line) => {
+          if (line.type === "paragraph") {
+            return <p>{line.content}</p>;
+          } else if (line.type === "link") {
+            return (
+              <p>
+                <a href="#">{line.content}</a>
+              </p>
+            );
+          }
+        })}
+      </div>
+
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
+        <strong>Deixe seu feedback</strong>
+        <textarea
+          name="comment"
+          value={newCommentText}
+          placeholder="Deixe um comentário"
+          onChange={handleNewCommentChange}
+        />
+        <footer>
+          <button type="submit">Publicar</button>
+        </footer>
+      </form>
+
+      <div className={styles.commentList}>
+        {comments.map((comment) => {
+          return <Comment content={comment} />;
+        })}
+      </div>
+    </article>
+  );
 }
